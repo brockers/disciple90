@@ -33,6 +33,27 @@
 	margin-left: 10px;
 }
 
+input {
+	flex: 1;
+	border: none;
+	outline: none;
+	background: transparent;
+	padding: 8px;
+	font-weight: bold;
+	font-size: 18px;
+}
+
+button {
+	border: none;
+	outline: none;
+	padding: 8px 50px;
+	background: #002765;
+	color: #fff;
+	font-size: 16px;
+	cursor: pointer;
+	border-radius: 40px;
+}
+
 .row {
 	display: flex;
 	align-items:center;
@@ -50,6 +71,7 @@ ul li {
 	user-select: none;
 	cursor: pointer;
 	position: relative;
+	border-radius: 10px;
 }
 
 ul li::before {
@@ -72,4 +94,8 @@ ul li.checked {
 
 ul li.checked::before {
 	background-image: url(images/checked.png);
+}
+
+ul li:hover {
+	background: #edeef0;
 }
