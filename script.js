@@ -17,9 +17,6 @@ const ninetyDays = Array(90).fill(start.getTime()).map( (v,k) => {
 	}
 });
 
-const listContainer = document.getElementById("list-container");
-const viewdate = document.getElementById("view-date");
-
 function setResults(r){
 	Object.entries(r).forEach( ([n,v]) => {
 		const element = document.getElementById(n);
@@ -31,13 +28,30 @@ function setResults(r){
 	});
 }
 
-viewdate.value = days[start.getDay()] + " " + months[start.getMonth()] + " " + start.getDate() + ", 2025";
+function getOurDay(ndays){
+  const today = new Date();
+  const timeless = new Date( (today.getTime() - (today.getTime() % 86400000)) );
+  if (timeless.getTime() < ndays[0].date.getTime()) { return ndays[0].date; }
+  else if (timeless.getTime() > ndays[ndays.length -1].date.getTime()) { return ndays[ndays.length -1].date; }
+  else { return timeless; }
+}
 
+function setDate(day){
+	const viewdate = document.getElementById("view-date");
+	viewdate.value = days[day.getDay()] + " " + months[day.getMonth()] + " " + day.getDate() + ", 2025";
+}
+
+const listContainer = document.getElementById("list-container");
 listContainer.addEventListener("click", (e) => {
 	if( results.hasOwnProperty(e.target.id) ){
 		results[e.target.id] = results[e.target.id] ? false : true;
 		setResults(results);
 	}
+});
+
+const goToTodayBtn = document.getElementById("goToToday");
+goToTodayBtn.addEventListener("click", (e) => { 
+	setDate(getOurDay(ninetyDays));
 });
 
 document.querySelector("#view-date").flatpickr({
@@ -47,4 +61,6 @@ document.querySelector("#view-date").flatpickr({
   maxDate: ninetyDays[89].date,
 });
 
+const testDate = new Date(2025, 4, 1);
+setDate(goToToday(ninetyDays));
 setResults(results);
