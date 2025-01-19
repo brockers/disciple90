@@ -11,10 +11,10 @@ const results = {
 	"fa" : unchecked
 }
 const ninetyDays = Array(90).fill(start.getTime()).map( (v,k) => {
-    return {
-        "date" : new Date(v + (k * (60 * 60 * 24 * 1000)) ),
-        "results" : results
-    }
+	return {
+		"date" : new Date(v + (k * (60 * 60 * 24 * 1000)) ),
+		"results" : results
+	}
 });
 
 const listContainer = document.getElementById("list-container");
@@ -34,10 +34,17 @@ function setResults(r){
 viewdate.value = days[start.getDay()] + " " + months[start.getMonth()] + " " + start.getDate() + ", 2025";
 
 listContainer.addEventListener("click", (e) => {
-    if( results.hasOwnProperty(e.target.id) ){
-        results[e.target.id] = results[e.target.id] ? false : true;
-        setResults(results);
-    }
+	if( results.hasOwnProperty(e.target.id) ){
+		results[e.target.id] = results[e.target.id] ? false : true;
+		setResults(results);
+	}
+});
+
+document.querySelector("#view-date").flatpickr({
+	enableTime: false,
+	dateFormat: "l M j, Y",
+	minDate: ninetyDays[0].date,
+  maxDate: ninetyDays[89].date,
 });
 
 setResults(results);
