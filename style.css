@@ -99,3 +99,7 @@ ul li.checked::before {
 ul li:hover {
 	background: #edeef0;
 }
+
+.warning {
+	color: #f22;
+}
