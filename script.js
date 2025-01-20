@@ -1,9 +1,21 @@
+const indexedDB = window.indexedDB || window.mozIndexedDB || window.webkitIndexedDB || window.msIndexedDB || window.shimIndexedDB;
+
+if (!indexedDB) { console.log("IndexedDB could not be found in this browser."); }
+
+const request = indexedDB.open("desciple90", 1);
+
+request.onerror = function (event) {
+	console.error("An error occurred with IndexedDB");
+	console.error(event);
+};
+
 // Start date of 2025 disciple 90
 const start = new Date(2025, 0, 20);
 // Default everything to unchecked for all days
 const ninetyDays = Array(90).fill(start.getTime()).map( (v,k) => {
+	const newDay = new Date(v + (k * (60 * 60 * 24 * 1000)));
 	return {
-		"date" : new Date(v + (k * (60 * 60 * 24 * 1000)) ),
+		"date" : newDay.getTime(),
 		"results" : {
 			"sl" : false, "cs" : false, "ex" : false,
 			"pc" : false, "tv" : false, "al" : false,
@@ -15,11 +27,12 @@ const ninetyDays = Array(90).fill(start.getTime()).map( (v,k) => {
 
 const config = {
 	"curIndex" : 0,
+	"startDate" : start.getTime(),
 	"days" : ninetyDays
 }
 
-const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-const days = ["Sunday", "Monday", "Tueday", "Wednesday", "Thusday", "Friday", "Saturday"];
+const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+const dayNames = ["Sunday", "Monday", "Tueday", "Wednesday", "Thusday", "Friday", "Saturday"];
 
 function setResults(c){
 	Object.entries(c.days[c.curIndex].results).forEach( ([n,v]) => {
@@ -34,30 +47,31 @@ function setResults(c){
 
 function getClosestToToday(c){
 	const today = new Date();
-	return getValidDateAndSetIndex(c, today);
+	const timeless = new Date( today.getFullYear(), today.getMonth(), today.getDate() );
+	return getValidDateAndSetIndex(c, timeless.getTime());
 }
 
 function getValidDateAndSetIndex(conf, day){
-	console.log(day);
-	const timeless = new Date( (day.getTime() - (day.getTime() % 86400000)) );
-	if (timeless.getTime() < conf.days[0].date.getTime()) { 
+	if (day <= conf.days[0].date) {
 		conf.curIndex = 0;
-	} else if (timeless.getTime() > conf.days[conf.days.length -1].date.getTime()) { 
+		return 0;
+	} else if (day >= conf.days[conf.days.length -1].date) {
 		conf.curIndex = conf.days[conf.days.length -1];
-	} else { 
+		return conf.days[conf.days.length -1];
+	} else {
 		conf.days.forEach( (val, ind) => {
-			if (val.date.getTime() === day.getTime()){ 
+			if (val.date === day || (val.date - 3600000) === day){
 				conf.curIndex = ind;
+				return ind;
 			}
 		});
 	}
 }
 
-function setDateForm(conf){
+function setTitle(conf){
 	// console.log(dayInd);
-	const viewdate = document.getElementById("view-date");
-	const day = conf.days[conf.curIndex].date;
-	viewdate.value = days[day.getDay()] + " " + months[day.getMonth()] + " " + day.getDate() + ", 2025";
+	const daycount = document.getElementById("daycount");
+	daycount.innerText = "Day " + (conf.curIndex + 1) + " Checklist";
 };
 
 const listContainer = document.getElementById("list-container");
@@ -69,13 +83,15 @@ listContainer.addEventListener("click", (e) => {
 });
 
 
-const flatpickr = document.getElementById("view-date").flatpickr({
+const viewdate = document.getElementById("view-date");
+const flatpickr = viewdate.flatpickr({
 	enableTime: false,
 	dateFormat: "l M j, Y",
 	minDate: ninetyDays[0].date,
 	maxDate: ninetyDays[89].date,
 	onChange: (date, dString, inst) => {
-		getValidDateAndSetIndex(config, date[0]);
+		getValidDateAndSetIndex(config, date[0].getTime());
+		setTitle(config);
 		setResults(config);
 	},
 });
@@ -85,9 +101,14 @@ goToTodayBtn.addEventListener("click", (e) => {
 	getClosestToToday(config);
 	flatpickr.setDate(config.days[config.curIndex].date);
 	// setDateForm(config);
+	setTitle(config);
 	setResults(config);
 });
 
-setDateForm(config);
+// Setup Initial Screen view
+getClosestToToday(config);
+const today = new Date(config.days[config.curIndex].date);
+viewdate.value = dayNames[today.getDay()] + " " + monthNames[today.getMonth()] + " " + today.getDate() + ", " + today.getFullYear();
+setTitle(config);
 setResults(config);
 
