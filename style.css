@@ -101,5 +101,9 @@ ul li:hover {
 }
 
 .warning {
-	color: #f22;
+	color: #900;
+}
+
+.success {
+	color: #070;
 }

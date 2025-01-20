@@ -74,7 +74,9 @@ function setResults(c){
 	ex.innerText = exTotal;
 	if( exTotal < 3 ) {
 		ex.classList.add("warning");
+		ex.classList.remove("success");
 	} else {
+		ex.classList.add("success");
 		ex.classList.remove("warning");
 	}
 }
