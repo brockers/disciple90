@@ -5,19 +5,21 @@ const jan1 = new Date(year, 0, 1);
 const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 const dayNames = ["Sunday", "Monday", "Tueday", "Wednesday", "Thusday", "Friday", "Saturday"];
 // Default everything to unchecked for all days
+const results = {
+	"sl" : false, "cs" : false, "ex" : false,
+	"pc" : false, "tv" : false, "al" : false,
+	"sn" : false, "mu" : false, "pu" : false,
+	"fa" : false, "hh" : false, "mo" : false,
+	"ne" : false, "re" : false
+};
+// Setup our primary localstorage data structure
 const ninetyDays = Array(90).fill(start.getTime()).map( (v,k) => {
 	const newDay = new Date(v + (k * (60 * 60 * 24 * 1000)));
 	const weekOfYear = getWeekOfYear(jan1, newDay);
 	return {
 		"date" : newDay.getTime(),
 		"week" : "week" + weekOfYear,
-		"results" : {
-			"sl" : false, "cs" : false, "ex" : false,
-			"pc" : false, "tv" : false, "al" : false,
-			"sn" : false, "mu" : false, "pu" : false,
-			"fa" : false, "hh" : false, "mo" : false,
-			"ne" : false
-		}
+		"results" : results
 	}
 });
 // Default Configuration for all 90 days
@@ -26,6 +28,21 @@ const config = {
 	"startDate" : start.getTime(),
 	"days" : ninetyDays,
 }
+
+// Readings
+const books = {
+	"Matthew" : 28,
+	"Mark" : 16,
+	"Luke" : 24,
+	"John" : 21
+}
+const readings = Object.entries(books).flatMap( (b) => {
+	const chapters = [];
+	for(var i = 1; i<=b[1]; i++){
+		chapters.push(b[0] + " Chapter " + i);
+	};
+	return chapters;
+});
 
 // Storage
 const DB = {
@@ -39,15 +56,21 @@ const DB = {
 			console.log("No existing saved values from localStorage... using defaults.");
 		} else {
 			Object.assign(c,saved);
+			Object.keys(results).forEach( (k) => {
+				if( ! c.days[0].results.hasOwnProperty(k) ) {
+					console.log( "Key " + k + " is missing from config... adding.");
+					c.days.forEach( d => { d.results[k] = false; });
+				}
+			});
 		}
 	}
 }
 
 // Need to know the week number for workout calculations
 function getWeekOfYear(januaryFirst, currentDate) {
-    const daysToNextMonday = (januaryFirst.getDay() === 1) ? 0 : (7 - januaryFirst.getDay()) % 7;
-    const nextMonday = new Date(januaryFirst.getFullYear(), 0, januaryFirst.getDate() + daysToNextMonday);
-    return (currentDate < nextMonday) ? 52 : (currentDate > nextMonday ? Math.ceil((currentDate - nextMonday) / (24 * 3600 * 1000) / 7) : 1);
+		const daysToNextMonday = (januaryFirst.getDay() === 1) ? 0 : (7 - januaryFirst.getDay()) % 7;
+		const nextMonday = new Date(januaryFirst.getFullYear(), 0, januaryFirst.getDate() + daysToNextMonday);
+		return (currentDate < nextMonday) ? 52 : (currentDate > nextMonday ? Math.ceil((currentDate - nextMonday) / (24 * 3600 * 1000) / 7) : 1);
 }
 
 function setResults(c){
@@ -79,6 +102,8 @@ function setResults(c){
 		ex.classList.add("success");
 		ex.classList.remove("warning");
 	}
+	const re = document.getElementById("reading");
+	re.innerText = readings[c.curIndex +1];
 }
 
 function getClosestToToday(c){
