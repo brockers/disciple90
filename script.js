@@ -103,7 +103,7 @@ function setResults(c){
 		ex.classList.remove("warning");
 	}
 	const re = document.getElementById("reading");
-	re.innerText = readings[c.curIndex +1];
+	re.innerText = readings[c.curIndex];
 }
 
 function getClosestToToday(c){
