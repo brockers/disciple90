@@ -1,0 +1,64 @@
+{
+	"short_name": "Reditus Men",
+	"name": "Reditus Men Daily Checklist",
+	"icons": [
+	{
+		"src": "/images/icon-192.png",
+		"type": "image/png",
+		"sizes": "192x192"
+	},
+	{
+		"src": "/images/icon-512.png",
+		"type": "image/png",
+		"sizes": "512x512"
+	},
+	{
+		"purpose": "maskable",
+		"sizes": "72x72",
+		"src": "/images/maskable_icon_x72.png",
+		"type": "image/png"
+	},
+	{
+		"purpose": "maskable",
+		"sizes": "128x128",
+		"src": "/images/maskable_icon_x128.png",
+		"type": "image/png"
+	},
+	{
+		"purpose": "maskable",
+		"sizes": "512x512",
+		"src": "/images/maskable_icon_x512.png",
+		"type": "image/png"
+	}
+	],
+	"id": "/index.html",
+	"start_url": "/index.html",
+	"background_color": "#3367D6",
+	"display": "standalone",
+	"scope": "/",
+	"theme_color": "#3367D6",
+	"shortcuts": [
+	{
+		"name": "Reditus Men",
+		"short_name": "Reditus Men",
+		"description": "Daily Checklist for Redius Men",
+		"url": "index.html",
+		"icons": [{ "src": "/images/icon-512.png", "sizes": "512x512" }]
+	}
+	],
+	"description": "Daily Checklist Tracker for Reditus Men",
+	"screenshots": [
+	{
+		"src": "/images/screenshot1.png",
+		"type": "image/png",
+		"sizes": "550x945",
+		"form_factor": "narrow"
+	},
+	{
+		"src": "/images/screenshot2.png",
+		"type": "image/png",
+		"sizes": "1584x958",
+		"form_factor": "wide"
+	}
+	]
+}
