@@ -10,7 +10,7 @@ const results = {
 	"pc" : false, "tv" : false, "al" : false,
 	"sn" : false, "mu" : false, "pu" : false,
 	"fa" : false, "hh" : false, "mo" : false,
-	"ne" : false, "re" : false
+	"ne" : false, "re" : false, "ci" : false
 };
 // Setup our primary localstorage data structure
 const ninetyDays = Array(90).fill(start.getTime()).map( (v,k) => {
