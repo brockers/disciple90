@@ -133,41 +133,84 @@ function setTitle(conf){
 	daycount.innerText = "Day " + (conf.curIndex + 1) + " Checklist";
 };
 
-const listContainer = document.getElementById("list-container");
-listContainer.addEventListener("click", (e) => {
-	if( config.days[config.curIndex].results.hasOwnProperty(e.target.id) ){
-		config.days[config.curIndex].results[e.target.id] = config.days[config.curIndex].results[e.target.id] ? false : true;
-		DB.saveConfig(config);
-		setResults(config);
-	}
-});
+function setHeatMap(conf){
 
-const flatpickr = document.getElementById("view-date").flatpickr({
-	enableTime: false,
-	dateFormat: "l M j, Y",
-	minDate: ninetyDays[0].date,
-	maxDate: ninetyDays[89].date,
-	onChange: (date, dString, inst) => {
-		getValidDateAndSetIndex(config, date[0].getTime());
+	const dataResults = conf.days.map( (d) => {
+		var count = 0;
+		Object.entries(d.results).forEach( (n,v) => {
+			if( n[1] === true ) { 
+				console.log(n[0]);
+				console.log(d);
+				count++ 
+			};	
+		});
+		return { date: d.date, value: count };
+	});
+	// const calender = document.getElementById("cal-heatmap");
+	const cal = new CalHeatmap();
+	cal.paint({
+		verticalOrientation: true,
+		range: 4,
+		domain: {
+			type: 'month',
+			padding: [10, 10, 10, 10],
+			label: { position: 'top' }
+		},
+		subDomain: { 
+			type: 'xDay', 
+			radius: 2,
+			width: 25,
+			height: 25,
+			label: 'D' 
+		},
+		date: {start: start},
+		highlight: [ new Date() ],
+		theme: 'light',
+		data: dataResults
+	});
+}
+
+DB.loadConfig(config);
+const listContainer = document.getElementById("list-container");
+
+if( listContainer === null ) {
+
+} else {
+
+	listContainer.addEventListener("click", (e) => {
+		if( config.days[config.curIndex].results.hasOwnProperty(e.target.id) ){
+			config.days[config.curIndex].results[e.target.id] = config.days[config.curIndex].results[e.target.id] ? false : true;
+			DB.saveConfig(config);
+			setResults(config);
+		}
+	});
+
+	const flatpickr = document.getElementById("view-date").flatpickr({
+		enableTime: false,
+		dateFormat: "l M j, Y",
+		minDate: ninetyDays[0].date,
+		maxDate: ninetyDays[89].date,
+		onChange: (date, dString, inst) => {
+			getValidDateAndSetIndex(config, date[0].getTime());
+			setTitle(config);
+			setResults(config);
+		},
+	});
+
+	const goToTodayBtn = document.getElementById("goToToday");
+	goToTodayBtn.addEventListener("click", (e) => {
+		getClosestToToday(config);
+		flatpickr.setDate(config.days[config.curIndex].date);
+		// setDateForm(config);
 		setTitle(config);
 		setResults(config);
-	},
-});
+	});
 
-const goToTodayBtn = document.getElementById("goToToday");
-goToTodayBtn.addEventListener("click", (e) => {
+	// Setup Initial Screen view
 	getClosestToToday(config);
-	flatpickr.setDate(config.days[config.curIndex].date);
-	// setDateForm(config);
+	const today = new Date(config.days[config.curIndex].date);
+	flatpickr.setDate(today);
 	setTitle(config);
 	setResults(config);
-});
 
-// Setup Initial Screen view
-DB.loadConfig(config);
-getClosestToToday(config);
-const today = new Date(config.days[config.curIndex].date);
-flatpickr.setDate(today);
-setTitle(config);
-setResults(config);
-
+}

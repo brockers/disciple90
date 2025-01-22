@@ -11,7 +11,16 @@
 	<body>
 		<div class="container">
 			<div class="checklist-app">
-				<h2><span id="daycount">Daily Checklist </span><span><img src="images/checklist.png" alt="Daily Checklist"></span></h2>
+				<h2>
+					<span id="daycount">Daily Checklist </span>
+					<span><img src="images/checklist.png" alt="Daily Checklist"></span>
+					<span>
+						<label class="switch">
+							<input type="checkbox">
+							<span class="slider round"></span>
+						</label>
+					</span>
+				</h2>
 				<div class="row">
 					<input type="text" id="view-date" placeholder="">
 					<button id="goToToday">Today</button>
@@ -19,7 +28,7 @@
 				<ul id="list-container">
 					<li id="sl">Full Nights Sleep</li>
 					<li id="mo">Make a Morning Offering</li>
-					<li id="re">Read <span id="reading">Bible</span></li>
+					<li id="re">Daily Reading (<span id="reading" class="info">Bible</span>)</li>
 					<li id="cs">Cold Showers</li>
 					<li id="ex">Exercise (<span id="exDays">1</span> of 3 finish this week)</li>
 					<li id="hh">Make a Holy Hour</li>
@@ -33,8 +42,11 @@
 					<li id="fa">Fast & Abstain from Meat</li>
 					<li id="ci">Check in with your accountability partner</li>
 				</ul>
+				<div>
+				</div>
 			</div>
 		</div>
+		<script src="db.js"></script>
 		<script src="script.js"></script>
 	</body>
 </html>
