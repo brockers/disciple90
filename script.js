@@ -174,44 +174,53 @@ function setHeatMap(conf){
 DB.loadConfig(config);
 const listContainer = document.getElementById("list-container");
 
-if( listContainer === null ) {
+listContainer.addEventListener("click", (e) => {
+	if( config.days[config.curIndex].results.hasOwnProperty(e.target.id) ){
+		config.days[config.curIndex].results[e.target.id] = config.days[config.curIndex].results[e.target.id] ? false : true;
+		DB.saveConfig(config);
+		setResults(config);
+	}
+});
 
-} else {
+const reportToggle = document.getElementById("reportOn");
+const calendarReport = document.getElementById("calendarReport"); 
+const checklistInput = document.getElementById("checklistInput");
 
-	listContainer.addEventListener("click", (e) => {
-		if( config.days[config.curIndex].results.hasOwnProperty(e.target.id) ){
-			config.days[config.curIndex].results[e.target.id] = config.days[config.curIndex].results[e.target.id] ? false : true;
-			DB.saveConfig(config);
-			setResults(config);
-		}
-	});
+reportToggle.addEventListener("change", () => {
+	if (reportToggle.checked) {
+		calendarReport.style.display = 'block';
+		checklistInput.style.display = 'none';
+	} else {
+		calendarReport.style.display = 'none';
+		checklistInput.style.display = 'block';
+	}
+});
 
-	const flatpickr = document.getElementById("view-date").flatpickr({
-		enableTime: false,
-		dateFormat: "l M j, Y",
-		minDate: ninetyDays[0].date,
-		maxDate: ninetyDays[89].date,
-		onChange: (date, dString, inst) => {
-			getValidDateAndSetIndex(config, date[0].getTime());
-			setTitle(config);
-			setResults(config);
-		},
-	});
-
-	const goToTodayBtn = document.getElementById("goToToday");
-	goToTodayBtn.addEventListener("click", (e) => {
-		getClosestToToday(config);
-		flatpickr.setDate(config.days[config.curIndex].date);
-		// setDateForm(config);
+const flatpickr = document.getElementById("view-date").flatpickr({
+	enableTime: false,
+	dateFormat: "l M j, Y",
+	minDate: ninetyDays[0].date,
+	maxDate: ninetyDays[89].date,
+	onChange: (date, dString, inst) => {
+		getValidDateAndSetIndex(config, date[0].getTime());
 		setTitle(config);
 		setResults(config);
-	});
+	},
+});
 
-	// Setup Initial Screen view
+const goToTodayBtn = document.getElementById("goToToday");
+goToTodayBtn.addEventListener("click", (e) => {
 	getClosestToToday(config);
-	const today = new Date(config.days[config.curIndex].date);
-	flatpickr.setDate(today);
+	flatpickr.setDate(config.days[config.curIndex].date);
+	// setDateForm(config);
 	setTitle(config);
 	setResults(config);
-	setHeatMap(config);
-}
+});
+
+// Setup Initial Screen view
+getClosestToToday(config);
+const today = new Date(config.days[config.curIndex].date);
+flatpickr.setDate(today);
+setTitle(config);
+setResults(config);
+setHeatMap(config);
