@@ -3,14 +3,10 @@
 	"name": "Reditus Men Daily Checklist",
 	"icons": [
 	{
-		"src": "/images/icon-192.png",
+		"src": "/images/maskable_icon_x192.png",
+		"purpose": "maskable",
 		"type": "image/png",
 		"sizes": "192x192"
-	},
-	{
-		"src": "/images/icon-512.png",
-		"type": "image/png",
-		"sizes": "512x512"
 	},
 	{
 		"purpose": "maskable",
@@ -22,6 +18,11 @@
 		"purpose": "maskable",
 		"sizes": "128x128",
 		"src": "/images/maskable_icon_x128.png",
+		"type": "image/png"
+	},
+	{
+		"sizes": "512x512",
+		"src": "/images/checklist.png",
 		"type": "image/png"
 	},
 	{
