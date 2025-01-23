@@ -131,6 +131,7 @@ function setTitle(conf){
 	// console.log(dayInd);
 	const daycount = document.getElementById("daycount");
 	daycount.innerText = "Day " + (conf.curIndex + 1) + " Checklist";
+	// <h2><span id="daycount">Observance Overview</span><span><img src="images/report.png" alt="Observance Report"></span></h2>
 };
 
 function setHeatMap(conf){
@@ -139,8 +140,8 @@ function setHeatMap(conf){
 		var count = 0;
 		Object.entries(d.results).forEach( (n,v) => {
 			if( n[1] === true ) { 
-				console.log(n[0]);
-				console.log(d);
+				// console.log(n[0]);
+				// console.log(d);
 				count++ 
 			};	
 		});
@@ -212,5 +213,5 @@ if( listContainer === null ) {
 	flatpickr.setDate(today);
 	setTitle(config);
 	setResults(config);
-
+	setHeatMap(config);
 }

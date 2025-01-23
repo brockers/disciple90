@@ -21,7 +21,7 @@
 	max-width: 540px;
 	background: #fff;
 	margin: 5px auto 20px;
-	padding: 40px 30px 70px;
+	padding: 40px 30px 50px;
 	border-radius: 10px;
 }
 
@@ -60,6 +60,10 @@ button {
 	font-size: 16px;
 	cursor: pointer;
 	border-radius: 40px;
+}
+
+#reportSwitch {
+	margin-left: auto;
 }
 
 .row {
@@ -187,5 +191,9 @@ input:checked + .slider:before {
 
 .slider.round:before {
 	border-radius: 50%;
+}
+
+#calendarReport {
+	display: none;
 }
 
