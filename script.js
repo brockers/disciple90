@@ -132,21 +132,30 @@ function getValidDateAndSetIndex(conf, day){
 
 function setTitle(conf){
 	// console.log(dayInd);
+	const checklistInput = document.getElementById("checklistInput");
 	const daycount = document.getElementById("daycount");
-	daycount.innerText = "Day " + (conf.curIndex + 1) + " Checklist";
-	// <h2><span id="daycount">Observance Overview</span><span><img src="images/report.png" alt="Observance Report"></span></h2>
+	const pageLogo = document.getElementById("pageLogo")
+
+	if( checklistInput.classList.contains("inActive") ) {
+		daycount.innerText = "Observance Report";
+		pageLogo.src = "images/report.png";
+	} else {
+		daycount.innerText = "Day " + (conf.curIndex + 1) + " Checklist";
+		pageLogo.src = "images/checklist.png";
+	}
 };
 
 function setHeatMap(conf){
 
+	const maxResults = Object.entries(results).length;
 	const dataResults = conf.days.map( (d) => {
 		var count = 0;
 		Object.entries(d.results).forEach( (n,v) => {
-			if( n[1] === true ) { 
+			if( n[1] === true ) {
 				// console.log(n[0]);
 				// console.log(d);
-				count++ 
-			};	
+				count++
+			};
 		});
 		return { date: d.date, value: count };
 	});
@@ -156,38 +165,43 @@ function setHeatMap(conf){
 		range: 4,
 		domain: {
 			type: 'month',
-			padding: [10, 10, 10, 10],
+			padding: [10, 0, 0, 0],
 			label: { position: 'top' }
 		},
-		subDomain: { 
-			type: 'xDay', 
+		subDomain: {
+			type: 'xDay',
 			radius: 2,
 			width: 25,
 			height: 25,
-			label: 'D' 
+			label: 'D'
 		},
 		date: {start: start},
 		highlight: [ new Date() ],
 		theme: 'light',
-		data: { 
+		data: {
 			source: dataResults,
 			type: 'json',
 			x: 'date',
 			y: 'value',
 			groupY: 'sum'
 		},
-		scale: { 
-			color: { 
+		scale: {
+			color: {
 				type: 'linear',
 				range: [ '#e8fff0', '#0b3b0b'],
 				domain: [0, Object.keys(results).length]
-			} 
+			}
 		},
 	},[
 		[
 			Tooltip, {
 				text: (d,v,djs) => {
-					return ( v + " on " + djs.format('LL') );
+					const total = () => {
+						if (djs.day() === 0) { return maxResults - 2; }
+						else if ((djs.day() === 3) || (djs.day() === 5)) { return maxResults; }
+						else { return maxResults -1; }
+					};
+					return ( v + " of " + total() + " on " + djs.format('MMM D') );
 				}
 			}
 		]
@@ -206,18 +220,19 @@ listContainer.addEventListener("click", (e) => {
 });
 
 const reportToggle = document.getElementById("reportOn");
-const calendarReport = document.getElementById("calendarReport"); 
+const calendarReport = document.getElementById("calendarReport");
 const checklistInput = document.getElementById("checklistInput");
 
 reportToggle.addEventListener("change", () => {
 	if (reportToggle.checked) {
 		setHeatMap(config);
-		calendarReport.style.display = 'flex';
-		checklistInput.style.display = 'none';
+		checklistInput.classList.toggle("inActive");
+		calendarReport.classList.toggle("active");
 	} else {
-		calendarReport.style.display = 'none';
-		checklistInput.style.display = 'block';
+		checklistInput.classList.toggle("inActive");
+		calendarReport.classList.toggle("active");
 	}
+	setTitle(config);
 });
 
 const flatpickr = document.getElementById("view-date").flatpickr({

@@ -194,8 +194,35 @@ input:checked + .slider:before {
 }
 
 #calendarReport {
-	display: none;
+	display: flex;
+	height: 0;
+	visibility: hidden;
+	opacity: 0;
 	justify-content: center;
+  background: rgba(240, 255, 240, 0.7);
+  -webkit-clip-path: polygon(0 0, 100% 0, 90% 100%, 0% 100%);
+          clip-path: polygon(0 0, 100% 0, 90% 100%, 0% 100%);
+	transition: all 1200ms cubic-bezier(0.77, 0, 0.175, 1);
+}
+
+#calendarReport.active {
+	visibility: visible;
+	opacity: 1;
+	height: auto;
+}
+
+#checklistInput {
+	display: block;
+	opacity: 1;
+	visibility: visible;
+  transition: all 1200ms allow-discrete;
+  height: auto;
+}
+
+#checklistInput.inActive {
+	opacity: 0;
+	height: 0px;
+	visibility: hidden;
 }
 
 #cal-heatmap {
