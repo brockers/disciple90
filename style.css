@@ -195,10 +195,15 @@ input:checked + .slider:before {
 
 #calendarReport {
 	display: none;
+	justify-content: center;
 }
 
 #cal-heatmap {
-	display: flex;
 	flex-direction: column;
 	justify-content: center;
+}
+
+.ch-domain-text {
+    font-size: 14px;
+    font-weight: bold;
 }

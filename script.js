@@ -66,6 +66,9 @@ const DB = {
 	}
 }
 
+// intialize our heatmap
+const cal = new CalHeatmap();
+
 // Need to know the week number for workout calculations
 function getWeekOfYear(januaryFirst, currentDate) {
 		const daysToNextMonday = (januaryFirst.getDay() === 1) ? 0 : (7 - januaryFirst.getDay()) % 7;
@@ -147,8 +150,7 @@ function setHeatMap(conf){
 		});
 		return { date: d.date, value: count };
 	});
-	// const calender = document.getElementById("cal-heatmap");
-	const cal = new CalHeatmap();
+	// Draw our heatmap
 	cal.paint({
 		verticalOrientation: true,
 		range: 4,
@@ -167,8 +169,29 @@ function setHeatMap(conf){
 		date: {start: start},
 		highlight: [ new Date() ],
 		theme: 'light',
-		data: dataResults
-	});
+		data: { 
+			source: dataResults,
+			type: 'json',
+			x: 'date',
+			y: 'value',
+			groupY: 'sum'
+		},
+		scale: { 
+			color: { 
+				type: 'linear',
+				range: [ '#e8fff0', '#0b3b0b'],
+				domain: [0, Object.keys(results).length]
+			} 
+		},
+	},[
+		[
+			Tooltip, {
+				text: (d,v,djs) => {
+					return ( v + " on " + djs.format('LL') );
+				}
+			}
+		]
+	]);
 }
 
 DB.loadConfig(config);
@@ -188,7 +211,8 @@ const checklistInput = document.getElementById("checklistInput");
 
 reportToggle.addEventListener("change", () => {
 	if (reportToggle.checked) {
-		calendarReport.style.display = 'block';
+		setHeatMap(config);
+		calendarReport.style.display = 'flex';
 		checklistInput.style.display = 'none';
 	} else {
 		calendarReport.style.display = 'none';
@@ -223,4 +247,4 @@ const today = new Date(config.days[config.curIndex].date);
 flatpickr.setDate(today);
 setTitle(config);
 setResults(config);
-setHeatMap(config);
+
