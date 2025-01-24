@@ -222,17 +222,16 @@ listContainer.addEventListener("click", (e) => {
 const reportToggle = document.getElementById("reportOn");
 const calendarReport = document.getElementById("calendarReport");
 const checklistInput = document.getElementById("checklistInput");
+const ch_containers = document.getElementsByClassName("ch-container");
 
 reportToggle.addEventListener("change", () => {
-	if (reportToggle.checked) {
 		setHeatMap(config);
 		checklistInput.classList.toggle("inActive");
 		calendarReport.classList.toggle("active");
-	} else {
-		checklistInput.classList.toggle("inActive");
-		calendarReport.classList.toggle("active");
-	}
-	setTitle(config);
+		for( var i = 0; i < ch_containers.length; i++) {
+			ch_containers[i].classList.toggle("inActive");
+		}
+		setTitle(config);
 });
 
 const flatpickr = document.getElementById("view-date").flatpickr({

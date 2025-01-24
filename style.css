@@ -211,6 +211,14 @@ input:checked + .slider:before {
 	height: auto;
 }
 
+.ch-container {
+	height: auto;
+}
+
+.ch-container.inActive {
+	height: 0;
+}
+
 #checklistInput {
 	display: block;
 	opacity: 1;
