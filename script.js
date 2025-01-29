@@ -66,6 +66,9 @@ const DB = {
 	}
 }
 
+// intialize our heatmap
+const cal = new CalHeatmap();
+
 // Need to know the week number for workout calculations
 function getWeekOfYear(januaryFirst, currentDate) {
 		const daysToNextMonday = (januaryFirst.getDay() === 1) ? 0 : (7 - januaryFirst.getDay()) % 7;
@@ -129,17 +132,106 @@ function getValidDateAndSetIndex(conf, day){
 
 function setTitle(conf){
 	// console.log(dayInd);
+	const checklistInput = document.getElementById("checklistInput");
 	const daycount = document.getElementById("daycount");
-	daycount.innerText = "Day " + (conf.curIndex + 1) + " Checklist";
+	const pageLogo = document.getElementById("pageLogo")
+
+	if( checklistInput.classList.contains("inActive") ) {
+		daycount.innerText = "Observance Report";
+		pageLogo.src = "images/report.png";
+	} else {
+		daycount.innerText = "Day " + (conf.curIndex + 1) + " Checklist";
+		pageLogo.src = "images/checklist.png";
+	}
 };
 
+function setHeatMap(conf){
+
+	const maxResults = Object.entries(results).length;
+	const dataResults = conf.days.map( (d) => {
+		var count = 0;
+		Object.entries(d.results).forEach( (n,v) => {
+			if( n[1] === true ) {
+				// console.log(n[0]);
+				// console.log(d);
+				count++
+			};
+		});
+		return { date: d.date, value: count };
+	});
+	// Draw our heatmap
+	cal.paint({
+		verticalOrientation: true,
+		range: 4,
+		domain: {
+			type: 'month',
+			padding: [10, 0, 0, 0],
+			label: { position: 'top' }
+		},
+		subDomain: {
+			type: 'xDay',
+			radius: 2,
+			width: 25,
+			height: 25,
+			label: 'D'
+		},
+		date: {start: start},
+		highlight: [ new Date() ],
+		theme: 'light',
+		data: {
+			source: dataResults,
+			type: 'json',
+			x: 'date',
+			y: 'value',
+			groupY: 'sum'
+		},
+		scale: {
+			color: {
+				type: 'linear',
+				range: [ '#e8fff0', '#0b3b0b'],
+				domain: [0, Object.keys(results).length]
+			}
+		},
+	},[
+		[
+			Tooltip, {
+				text: (d,v,djs) => {
+					const total = () => {
+						if (djs.day() === 0) { return maxResults - 2; }
+						else if ((djs.day() === 3) || (djs.day() === 5)) { return maxResults; }
+						else { return maxResults -1; }
+					};
+					return ( v + " of " + total() + " on " + djs.format('MMM D') );
+				}
+			}
+		]
+	]);
+}
+
+DB.loadConfig(config);
 const listContainer = document.getElementById("list-container");
+
 listContainer.addEventListener("click", (e) => {
 	if( config.days[config.curIndex].results.hasOwnProperty(e.target.id) ){
 		config.days[config.curIndex].results[e.target.id] = config.days[config.curIndex].results[e.target.id] ? false : true;
 		DB.saveConfig(config);
 		setResults(config);
 	}
+});
+
+const reportToggle = document.getElementById("reportOn");
+const calendarReport = document.getElementById("calendarReport");
+const checklistInput = document.getElementById("checklistInput");
+const ch_containers = document.getElementsByClassName("ch-container");
+
+reportToggle.addEventListener("change", () => {
+		setHeatMap(config);
+		checklistInput.classList.toggle("inActive");
+		calendarReport.classList.toggle("active");
+		for( var i = 0; i < ch_containers.length; i++) {
+			ch_containers[i].classList.toggle("inActive");
+		}
+		setTitle(config);
 });
 
 const flatpickr = document.getElementById("view-date").flatpickr({
@@ -164,7 +256,6 @@ goToTodayBtn.addEventListener("click", (e) => {
 });
 
 // Setup Initial Screen view
-DB.loadConfig(config);
 getClosestToToday(config);
 const today = new Date(config.days[config.curIndex].date);
 flatpickr.setDate(today);

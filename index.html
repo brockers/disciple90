@@ -4,35 +4,54 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<title> Reditus Men</title>
 		<link rel="manifest" href="/manifest.json">
-		<link rel="stylesheet" href="style.css">
 		<link rel="stylesheet" href="/flatpickr.min.css">
+		<link rel="stylesheet" href="/cal-heatmap.css">
+		<link rel="stylesheet" href="style.css">
 		<script src="/flatpickr.min.js"></script>
+		<script src="/d3.v7.min.js"></script>
+		<script src="/popper.js"></script>
+		<script src="/Tooltip.min.js"></script>
+		<script src="/cal-heatmap.min.js"></script>
 	</head>
 	<body>
 		<div class="container">
 			<div class="checklist-app">
-				<h2><span id="daycount">Daily Checklist </span><span><img src="images/checklist.png" alt="Daily Checklist"></span></h2>
-				<div class="row">
-					<input type="text" id="view-date" placeholder="">
-					<button id="goToToday">Today</button>
-				</div>
-				<ul id="list-container">
-					<li id="sl">Full Nights Sleep</li>
-					<li id="mo">Make a Morning Offering</li>
-					<li id="re">Read <span id="reading">Bible</span></li>
-					<li id="cs">Cold Showers</li>
-					<li id="ex">Exercise (<span id="exDays">1</span> of 3 finish this week)</li>
-					<li id="hh">Make a Holy Hour</li>
-					<li id="pc">Avoided Smartphone & Computer Use</li>
-					<li id="tv">No TV or Video Games</li>
-					<li id="al">No Alcohol, Soft Drinks, or Sweet Drinks</li>
-					<li id="sn">No Snacking, Sweets, or Desserts </li>
-					<li id="mu">Only Listen to Spiritually uplifting music</li>
-					<li id="pu">No Unnecessary Purchases</li>
-					<li id="ne">Make a Nightly Examination</li>
-					<li id="fa">Fast & Abstain from Meat</li>
-					<li id="ci">Check in with your accountability partner</li>
-				</ul>
+				<h2>
+					<span id="daycount">Daily Checklist </span>
+					<span><img id="pageLogo" src="images/checklist.png" alt="Daily Checklist"></span>
+					<span id="reportSwitch">
+						<label class="switch">
+							<input id="reportOn" type="checkbox">
+							<span class="slider round"></span>
+						</label>
+					</span>
+				</h2>
+				<span id="checklistInput">
+					<div class="row">
+						<input type="text" id="view-date" placeholder="">
+						<button id="goToToday">Today</button>
+					</div>
+					<ul id="list-container">
+						<li id="sl">Full Nights Sleep</li>
+						<li id="mo">Make a Morning Offering</li>
+						<li id="re">Daily Reading (<span id="reading" class="info">Bible</span>)</li>
+						<li id="cs">Cold Showers</li>
+						<li id="ex">Exercise (<span id="exDays">1</span> of 3 finish this week)</li>
+						<li id="hh">Make a Holy Hour</li>
+						<li id="pc">Avoided Smartphone & Computer Use</li>
+						<li id="tv">No TV or Video Games</li>
+						<li id="al">No Alcohol, Soft Drinks, or Sweet Drinks</li>
+						<li id="sn">No Snacking, Sweets, or Desserts </li>
+						<li id="mu">Only Listen to Spiritually uplifting music</li>
+						<li id="pu">No Unnecessary Purchases</li>
+						<li id="ne">Make a Nightly Examination</li>
+						<li id="fa">Fast & Abstain from Meat</li>
+						<li id="ci">Check in with your accountability partner</li>
+					</ul>
+				</span>
+				<span id="calendarReport">
+					<div id="cal-heatmap"></div>
+				</span>
 			</div>
 		</div>
 		<script src="script.js"></script>
