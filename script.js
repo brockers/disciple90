@@ -64,10 +64,10 @@ const DB = {
 				}
 			});
 			// Ealier bug means I need to reset any days in the future to false... even on saved data
-			c.days.forEach( d => { 
+			c.days.forEach( d => {
 				if (d.date > today.getTime() ) {
 					console.log( "Resetting future date " + d.date + " back to default." );
-					d.results =JSON.parse(JSON.stringify(results)); 
+					d.results =JSON.parse(JSON.stringify(results));
 				}
 			});
 		}
