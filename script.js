@@ -19,7 +19,7 @@ const ninetyDays = Array(90).fill(start.getTime()).map( (v,k) => {
 	return {
 		"date" : newDay.getTime(),
 		"week" : "week" + weekOfYear,
-		"results" : results
+		"results" : JSON.parse(JSON.stringify(results))
 	}
 });
 // Default Configuration for all 90 days
@@ -54,7 +54,6 @@ const DB = {
 		const saved = JSON.parse(localStorage.getItem(this.DBName));
 		if(!saved){
 			console.log("No existing saved values from localStorage... using defaults.");
-			Object.assign(c,saved);
 		} else {
 			Object.assign(c,saved);
 			Object.keys(results).forEach( (k) => {
@@ -214,22 +213,9 @@ function setHeatMap(conf){
 DB.loadConfig(config);
 const listContainer = document.getElementById("list-container");
 
-function updateTargetValue(c, day, target, set){
-	c.days[day].results[target] = set;
-}
-
 listContainer.addEventListener("click", (e) => {
 	if( config.days[config.curIndex].results.hasOwnProperty(e.target.id) ){
-		console.log(config);
-		if ( config.days[config.curIndex].results[e.target.id] ) {
-			// config.days[config.curIndex].results[e.target.id] = false;
-			updateTargetValue(config, config.curIndex, e.target.id, false);
-		} else {
-			// config.days[config.curIndex].results[e.target.id] = true;
-			updateTargetValue(config, config.curIndex, e.target.id, true);
-		}
-		// config.days[config.curIndex].results[e.target.id] = config.days[config.curIndex].results[e.target.id] ? false : true;
-		console.log(config);
+		config.days[config.curIndex].results[e.target.id] = config.days[config.curIndex].results[e.target.id] ? false : true;
 		DB.saveConfig(config);
 		setResults(config);
 	}
