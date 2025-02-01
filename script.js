@@ -1,4 +1,5 @@
 // Start date of 2025 disciple 90
+const today = new Date();
 const year = "2025";
 const start = new Date(year, 0, 20);
 const jan1 = new Date(year, 0, 1);
@@ -19,7 +20,7 @@ const ninetyDays = Array(90).fill(start.getTime()).map( (v,k) => {
 	return {
 		"date" : newDay.getTime(),
 		"week" : "week" + weekOfYear,
-		"results" : results
+		"results" : JSON.parse(JSON.stringify(results))
 	}
 });
 // Default Configuration for all 90 days
@@ -62,6 +63,13 @@ const DB = {
 					c.days.forEach( d => { d.results[k] = false; });
 				}
 			});
+			// Ealier bug means I need to reset any days in the future to false... even on saved data
+			c.days.forEach( d => {
+				if (d.date > today.getTime() ) {
+					console.log( "Resetting future date " + d.date + " back to default." );
+					d.results =JSON.parse(JSON.stringify(results));
+				}
+			});
 		}
 	}
 }
@@ -93,7 +101,9 @@ function setResults(c){
 		fa.style.display = "none";
 	}
 	// Get weekly workout totals
-	const workoutDays = c.days.filter( (obj) => { return obj.results.ex }).map( (v) => v.week ).reduce((acc, curr) => { acc[curr] = (acc[curr] || 0) +1; return acc;}, {});;
+	const workoutDays = c.days.filter( (obj) => { return obj.results.ex })
+		.map( (v) => v.week )
+		.reduce((acc, curr) => { acc[curr] = (acc[curr] || 0) +1; return acc;}, {});;
 	const exTotal = workoutDays[c.days[c.curIndex].week] || "0";
 	const ex = document.getElementById("exDays");
 	// Set weekly workout totals
@@ -110,7 +120,6 @@ function setResults(c){
 }
 
 function getClosestToToday(c){
-	const today = new Date();
 	const timeless = new Date( today.getFullYear(), today.getMonth(), today.getDate() );
 	return getValidDateAndSetIndex(c, timeless.getTime());
 }
@@ -257,7 +266,6 @@ goToTodayBtn.addEventListener("click", (e) => {
 
 // Setup Initial Screen view
 getClosestToToday(config);
-const today = new Date(config.days[config.curIndex].date);
 flatpickr.setDate(today);
 setTitle(config);
 setResults(config);
