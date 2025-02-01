@@ -54,6 +54,7 @@ const DB = {
 		const saved = JSON.parse(localStorage.getItem(this.DBName));
 		if(!saved){
 			console.log("No existing saved values from localStorage... using defaults.");
+			Object.assign(c,saved);
 		} else {
 			Object.assign(c,saved);
 			Object.keys(results).forEach( (k) => {
@@ -93,7 +94,9 @@ function setResults(c){
 		fa.style.display = "none";
 	}
 	// Get weekly workout totals
-	const workoutDays = c.days.filter( (obj) => { return obj.results.ex }).map( (v) => v.week ).reduce((acc, curr) => { acc[curr] = (acc[curr] || 0) +1; return acc;}, {});;
+	const workoutDays = c.days.filter( (obj) => { return obj.results.ex })
+		.map( (v) => v.week )
+		.reduce((acc, curr) => { acc[curr] = (acc[curr] || 0) +1; return acc;}, {});;
 	const exTotal = workoutDays[c.days[c.curIndex].week] || "0";
 	const ex = document.getElementById("exDays");
 	// Set weekly workout totals
@@ -211,9 +214,22 @@ function setHeatMap(conf){
 DB.loadConfig(config);
 const listContainer = document.getElementById("list-container");
 
+function updateTargetValue(c, day, target, set){
+	c.days[day].results[target] = set;
+}
+
 listContainer.addEventListener("click", (e) => {
 	if( config.days[config.curIndex].results.hasOwnProperty(e.target.id) ){
-		config.days[config.curIndex].results[e.target.id] = config.days[config.curIndex].results[e.target.id] ? false : true;
+		console.log(config);
+		if ( config.days[config.curIndex].results[e.target.id] ) {
+			// config.days[config.curIndex].results[e.target.id] = false;
+			updateTargetValue(config, config.curIndex, e.target.id, false);
+		} else {
+			// config.days[config.curIndex].results[e.target.id] = true;
+			updateTargetValue(config, config.curIndex, e.target.id, true);
+		}
+		// config.days[config.curIndex].results[e.target.id] = config.days[config.curIndex].results[e.target.id] ? false : true;
+		console.log(config);
 		DB.saveConfig(config);
 		setResults(config);
 	}
