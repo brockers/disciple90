@@ -1,4 +1,5 @@
 // Start date of 2025 disciple 90
+const today = new Date();
 const year = "2025";
 const start = new Date(year, 0, 20);
 const jan1 = new Date(year, 0, 1);
@@ -62,6 +63,13 @@ const DB = {
 					c.days.forEach( d => { d.results[k] = false; });
 				}
 			});
+			// Ealier bug means I need to reset any days in the future to false... even on saved data
+			c.days.forEach( d => { 
+				if (d.date > today.getTime() ) {
+					console.log( "Resetting future date " + d.date + " back to default." );
+					d.results =JSON.parse(JSON.stringify(results)); 
+				}
+			});
 		}
 	}
 }
@@ -112,7 +120,6 @@ function setResults(c){
 }
 
 function getClosestToToday(c){
-	const today = new Date();
 	const timeless = new Date( today.getFullYear(), today.getMonth(), today.getDate() );
 	return getValidDateAndSetIndex(c, timeless.getTime());
 }
@@ -259,7 +266,6 @@ goToTodayBtn.addEventListener("click", (e) => {
 
 // Setup Initial Screen view
 getClosestToToday(config);
-const today = new Date(config.days[config.curIndex].date);
 flatpickr.setDate(today);
 setTitle(config);
 setResults(config);
