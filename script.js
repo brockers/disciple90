@@ -1,7 +1,11 @@
-// Start date of 2025 disciple 90
 const today = new Date();
-const year = "2025";
-const start = new Date(year, 0, 20);
+// Enter Easter and calculate backwards
+const Easter = new Date('4/5/2026');
+const year = Easter.getFullYear();
+// Get our Easter date and set start to 90 days earlier
+const start = new Date(Easter);
+start.setDate(start.getDate() -90);
+console.log("Start Date of Exodus 90 is: " + start.toDateString());
 const jan1 = new Date(year, 0, 1);
 const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 const dayNames = ["Sunday", "Monday", "Tueday", "Wednesday", "Thusday", "Friday", "Saturday"];
